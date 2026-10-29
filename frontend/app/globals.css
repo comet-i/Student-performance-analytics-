@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* EduTrack theme (RGB triplets so Tailwind opacity modifiers work) */
+:root {
+  --bg: 250 245 238;   --panel: 241 230 214; --card: 255 255 255; --line: 234 223 206;
+  --brand: 139 115 85; --ink: 62 49 38;      --muted: 138 125 111;
+  --ok: 79 122 85;     --okbg: 230 239 226;  --bad: 181 82 63;    --badbg: 246 225 220;
+}
+
+body { @apply bg-bg font-sans text-ink antialiased; }
+
+@layer components {
+  .card { @apply rounded-2xl border border-line bg-card p-6 shadow-sm; }
+  .chip { @apply rounded-full bg-okbg px-3 py-1 text-xs text-ok; }
+}

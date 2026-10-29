@@ -1,0 +1,38 @@
+# ---- dependencies ----
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# ---- secrets (commit only the .env.example templates) ----
+.env
+.env.*
+!.env.example
+
+# ---- build output ----
+.next/
+out/
+dist/
+coverage/
+.vercel/
+
+# ---- Supabase CLI local state ----
+database/supabase/.branches
+database/supabase/.temp
+
+# ---- data ----
+# Real student exports and database dumps must never be committed.
+analytics/data/real/
+*.dump
+backup*.sql
+# Small synthetic CSVs in analytics/data/synthetic/ may be committed.
+# Do NOT ignore analytics/artifacts/*.joblib: Render's disk is wiped on restart, so the model must come from git.
+
+# ---- notebooks / logs / editors / OS ----
+.ipynb_checkpoints/
+*.log
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
