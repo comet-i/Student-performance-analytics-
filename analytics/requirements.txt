@@ -1,0 +1,8 @@
+# Online service only (Render web service). Keep this list small: cold starts matter.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.0
+numpy==2.2.1
+scikit-learn==1.6.0   # must match the version that trained artifacts/model_v1.joblib
+joblib==1.4.2
