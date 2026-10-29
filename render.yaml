@@ -1,9 +1,4 @@
 # Render Blueprint (repo root). Free plan: no private networking, no cron jobs.
-#   - The backend calls the engine over its PUBLIC https URL, protected by ML_ENGINE_API_KEY.
-#   - The engine is stateless: it receives data from the backend and holds no database key.
-#   - Both services sleep after 15 idle minutes (cold start ~1 min). Do NOT keep them awake with pings:
-#     two always-on services would exceed the 750 free hours/month and Render would suspend both.
-#   - The nightly batch runs from GitHub Actions (.github/workflows/nightly-predictions.yml).
 services:
   - type: web
     name: student-analytics-api
@@ -11,7 +6,7 @@ services:
     plan: free
     region: singapore          # keep services in the region nearest your Supabase project
     rootDir: backend
-    branch: Edustack
+    branch: Edustack           # <--- Changed from main to Edustack
     buildCommand: npm ci --omit=dev
     startCommand: npm start
     healthCheckPath: /health
@@ -25,53 +20,29 @@ services:
         sync: false
       - key: SUPABASE_ANON_KEY
         sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY   # server-side only; used to store predictions and tips
+      - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
-      - key: FRONTEND_URL        # e.g. https://your-app.vercel.app (comma-separate extra origins)
+      - key: FRONTEND_URL
         sync: false
-      - key: ML_ENGINE_URL       # public URL of the engine, e.g. https://student-analytics-engine.onrender.com
+      - key: ML_ENGINE_URL
         sync: false
-      - key: ML_ENGINE_API_KEY   # generated once on the engine, copied here automatically
-        fromService:
-          type: web
-          name: student-analytics-engine
-          envVarKey: ML_ENGINE_API_KEY
+      - key: ML_ENGINE_API_KEY
+        generateValue: true   # <--- Temporarily generated directly here since analytics engine is paused
 
-#  - type: web
- #   name: student-analytics-engine
-   # runtime: python
-   # plan: free
-  #  region: singapore
-   # rootDir: analytics
-   # branch: main
-   # buildCommand: pip install -r requirements.txt
-   # startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-   # healthCheckPath: /health
-   # autoDeploy: true
-   # envVars:
-    #  - key: PYTHON_VERSION
-     #   value: 3.12.8
-     # - key: ML_ENGINE_API_KEY
-     #   generateValue: true
-
-  # Optional: host the frontend on Render instead of Vercel. This adds a third free service with its own
-  # cold start, and Vercel's free plan is for non-commercial use only. Uncomment if you need Render-only.
+  # (Temporarily commented out until you are ready to write the analytics engine)
   # - type: web
-  #   name: student-analytics-web
-  #   runtime: node
+  #   name: student-analytics-engine
+  #   runtime: python
   #   plan: free
   #   region: singapore
-  #   rootDir: frontend
-  #   branch: main
-  #   buildCommand: npm ci && npm run build
-  #   startCommand: npm start
+  #   rootDir: analytics
+  #   branch: Edustack
+  #   buildCommand: pip install -r requirements.txt
+  #   startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+  #   healthCheckPath: /health
   #   autoDeploy: true
   #   envVars:
-  #     - key: NODE_VERSION
-  #       value: 20.18.0
-  #     - key: NEXT_PUBLIC_SUPABASE_URL
-  #       sync: false
-  #     - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
-  #       sync: false
-  #     - key: NEXT_PUBLIC_API_URL   # https://student-analytics-api.onrender.com
-  #       sync: false
+  #     - key: PYTHON_VERSION
+  #       value: 3.12.8
+  #     - key: ML_ENGINE_API_KEY
+        generateValue: true
