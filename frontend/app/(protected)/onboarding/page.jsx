@@ -16,12 +16,16 @@ export default function Onboarding() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function finish() {
+ async function finish() {
     setBusy(true);
     setError("");
     try {
-      const subjects = names.split(",").map((n) => n.trim()).filter(Boolean);
-      await Promise.all(subjects.map((name) => api("/subjects", { method: "POST", body: { name } })));
+      const subjects = names.split(",").map((n) => n.trim()).filter(Boolean).map((name, index) => ({
+        subject_code: `SUB${index + 1}`, // Generates a valid code like SUB1, SUB2
+        subject_name: name,
+      }));
+
+      await Promise.all(subjects.map((body) => api("/enrollments", { method: "POST", body })));
       await createClient().auth.updateUser({ data: { attendance_goal: +goal, onboarded: true } });
       qc.invalidateQueries();
       router.replace("/dashboard");
@@ -30,8 +34,7 @@ export default function Onboarding() {
       setError(e.message);
       setBusy(false);
     }
-  }
-
+}
   return (
     <div className="mx-auto max-w-md pt-10">
       <p className="text-sm text-muted">Step {step + 1} of 2</p>

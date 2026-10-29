@@ -16,9 +16,16 @@ export default function Dashboard() {
   const { data: tasks = [] } = useTasks();
   const { data: prediction } = usePrediction();
 
-  const attendance = sum(subjects, "total") ? Math.round((sum(subjects, "attended") / sum(subjects, "total")) * 100) : 0;
-  const avg = marks.length ? Math.round(marks.reduce((s, m) => s + (m.score / m.max) * 100, 0) / marks.length) : 0;
-  const open = tasks.filter((t) => t.status !== "done").length;
+  // To this:
+  const attendance = subjects.length ? Math.round(subjects.reduce((acc, s) => acc + (s.attendancePct || s.attendance_pct || 0), 0) / subjects.length) : 0;
+  // Replace your existing 'avg' line with this:
+  // 1. Sum all scores and all max values securely
+  const totalObtained = marks.reduce((sum, m) => sum + (Number(m.score) || 0), 0);
+  const totalMax = marks.reduce((sum, m) => sum + (Number(m.max) || 100), 0);
+
+  // 2. Calculate the true average and cap it at 100% to prevent impossible spikes
+  const avg = totalMax > 0 ? Math.min(Math.round((totalObtained / totalMax) * 100), 100) : 0;
+  const open = Array.isArray(tasks) ? tasks.filter((t) => t.status !== "done").length : 0;
 
   return (
     <>

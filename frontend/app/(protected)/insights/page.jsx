@@ -20,7 +20,7 @@ export default function InsightsPage() {
       <div className="card mt-6">
         <h2 className="mb-4 font-semibold">Tips for you</h2>
         <ul className="space-y-3 text-sm">
-          {data.tips.map((t) => (
+          {(data?.tips || []).map((t) => (
             <li key={t} className="flex gap-3"><Lightbulb size={16} className="mt-0.5 shrink-0 text-brand" />{t}</li>
           ))}
         </ul>

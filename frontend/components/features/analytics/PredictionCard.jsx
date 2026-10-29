@@ -7,15 +7,20 @@ const RISK = {
 };
 
 export default function PredictionCard({ data }) {
+  if (!data) return null;
+  const score = Math.round(data.predicted_score || 0);
+  const riskLevel = data.risk || "low";
+  const streakCount = data.streak || 0;
+
   return (
     <div className="card">
       <div className="flex items-center justify-between text-sm text-muted">
         Predicted performance <Sparkles size={16} className="text-brand" />
       </div>
-      <p className="mt-3 text-5xl font-semibold">{Math.round(data.predicted_score)}%</p>
+      <p className="mt-3 text-5xl font-semibold">{score}%</p>
       <div className="mt-4 flex items-center gap-3 text-sm">
-        <span className={RISK[data.risk]}>{data.risk} risk</span>
-        <span className="flex items-center gap-1 text-muted"><Flame size={14} />{data.streak}-day streak</span>
+        <span className={RISK[riskLevel] || RISK.low}>{riskLevel} risk</span>
+        <span className="flex items-center gap-1 text-muted"><Flame size={14} />{streakCount}-day streak</span>
       </div>
     </div>
   );
