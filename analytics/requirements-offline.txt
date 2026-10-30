@@ -1,0 +1,5 @@
+# Offline scripts only (training + nightly batch). Not installed on the Render web service.
+-r requirements.txt
+pandas==2.2.3
+supabase==2.11.0
+python-dotenv==1.0.1

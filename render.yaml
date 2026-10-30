@@ -1,0 +1,48 @@
+# Render Blueprint (repo root). Free plan: no private networking, no cron jobs.
+services:
+  - type: web
+    name: student-analytics-api
+    runtime: node
+    plan: free
+    region: singapore          # keep services in the region nearest your Supabase project
+    rootDir: backend
+    branch: Edustack           # <--- Changed from main to Edustack
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: ML_ENGINE_URL
+        sync: false
+      - key: ML_ENGINE_API_KEY
+        generateValue: true   # <--- Temporarily generated directly here since analytics engine is paused
+
+  # (Temporarily commented out until you are ready to write the analytics engine)
+  # - type: web
+  #   name: student-analytics-engine
+  #   runtime: python
+  #   plan: free
+  #   region: singapore
+  #   rootDir: analytics
+  #   branch: Edustack
+  #   buildCommand: pip install -r requirements.txt
+  #   startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+  #   healthCheckPath: /health
+  #   autoDeploy: true
+  #   envVars:
+  #     - key: PYTHON_VERSION
+  #       value: 3.12.8
+  #     - key: ML_ENGINE_API_KEY
+        generateValue: true
