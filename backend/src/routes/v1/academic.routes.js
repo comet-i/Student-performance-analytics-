@@ -6,6 +6,7 @@ import * as s from '../../validators/schemas.js';
 
 export default Router()
   .use('/enrollments', crudRouter(c.enrollments, { create: s.enrollmentCreate, patch: s.enrollmentPatch }))
+  .use('/subjects', crudRouter(c.enrollments, { create: s.enrollmentCreate, patch: s.enrollmentPatch }))
   .use('/assessments', crudRouter(c.assessments, { create: s.assessmentCreate, patch: s.assessmentPatch }))
   .use('/syllabus', crudRouter(c.syllabus, { create: s.syllabusCreate, patch: s.syllabusPatch }))
   .use('/board-marks', crudRouter(c.boardMarks, { create: s.boardMark, patch: s.boardMarkPatch }))
